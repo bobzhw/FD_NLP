@@ -1,0 +1,1 @@
+{"commenText":"矩形ABCD中,AE⊥BD于E,∠DAE=45,则∠CBD=_.","entitys":{"∠CBD":"Asking1","BD":"LineSegment","AE":"LineSegment","ABCD":"Rectangle"},"relations":[{"entity1":"AE","entity2":"BD","relationString":"Perpendicular"},{"entity1":"∠DAE","entity2":"45","relationString":"Equal"}]}

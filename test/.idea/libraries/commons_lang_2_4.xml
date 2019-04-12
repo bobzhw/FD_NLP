@@ -1,0 +1,20 @@
+<component name="libraryTable">
+  <library name="commons-lang-2.4">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../testapi/lib/commons-lang-2.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../testapi/lib/commons-logging.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../testapi/lib/connect.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../testapi/lib/dom4j-1.6.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../testapi/lib/gson-2.2.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../testapi/lib/httpclient-4.3.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../testapi/lib/httpclient-cache-4.3.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../testapi/lib/httpcore-4.3.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../testapi/lib/httpmime-4.3.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../testapi/lib/jaxen-1.1-beta-6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../testapi/lib/jaxme-api-0.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../testapi/lib/servlet-api.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

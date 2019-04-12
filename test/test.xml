@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<question id="test01_65" type="solution">
+  <blank num="1" format="latex">
+    <Sentence>
+      <logic>Rectangle(ABCD)</logic>
+      <logic>Diagonal(AC)</logic>
+      <logic>Equal(AC,8cm)</logic>
+      <logic>DiagonalOfRectangle(ABCD,AC)</logic>
+    </Sentence>
+    <Sentence>
+      <logic>Equal(∠AOD,120)</logic>
+    </Sentence>
+    <Sentence>
+      <logic>LengthOfLineSegment(AB,rs_a)</logic>
+      <logic>Asking1(rs_a)</logic>
+      <logic>LineSegment(AB)</logic>
+    </Sentence>
+  </blank>
+</question>

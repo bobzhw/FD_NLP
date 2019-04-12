@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<question id="test01_65" type="solution">
+  <blank num="1" format="latex">
+    <Sentence>
+      <logic>Triangle(ABC)</logic>
+      <logic>中位线OfTriangle(ABC,DE)</logic>
+      <logic>中位线(DE)</logic>
+    </Sentence>
+    <Sentence>
+      <logic>Point(D)</logic>
+      <logic>On(D,AB)</logic>
+      <logic>LineSegment(AB)</logic>
+    </Sentence>
+    <Sentence>
+      <logic>Point(E)</logic>
+      <logic>On(E,AC)</logic>
+      <logic>LineSegment(AC)</logic>
+    </Sentence>
+    <Sentence>
+      <logic>LineSegment(BC)</logic>
+    </Sentence>
+    <Sentence>
+      <logic>Equal(DE,0.5)</logic>
+    </Sentence>
+  </blank>
+</question>
