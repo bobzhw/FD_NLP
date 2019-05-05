@@ -3,25 +3,27 @@
 <question id="test01_65" type="solution">
   <blank num="1" format="latex">
     <Sentence>
+      <logic>ArithmeticSequence(a)</logic>
+      <logic>ToleranceOfArithmeticSequence(a,d)</logic>
+      <logic>OfArithmeticSequence(a,_n)</logic>
       <logic>Triangle(ABC)</logic>
-      <logic>中位线OfTriangle(ABC,DE)</logic>
-      <logic>中位线(DE)</logic>
+      <logic>Edge(AB)</logic>
+      <logic>EdgeOfTriangle(ABC,AB)</logic>
+      <logic>Edge(AC)</logic>s
+      <logic>EdgeOfTriangle(ABC,AC)</logic>
+      <logic>Edge(BC)</logic>
+      <logic>EdgeOfTriangle(ABC,BC)</logic>
+      <logic>构成null(_n,AB,AC,BC)</logic>
+      <logic>null(_n)</logic>
     </Sentence>
     <Sentence>
-      <logic>Point(D)</logic>
-      <logic>On(D,AB)</logic>
-      <logic>LineSegment(AB)</logic>
+      <logic>AreaOfTriangle(ABC,t)</logic>
     </Sentence>
     <Sentence>
-      <logic>Point(E)</logic>
-      <logic>On(E,AC)</logic>
-      <logic>LineSegment(AC)</logic>
-    </Sentence>
-    <Sentence>
-      <logic>LineSegment(BC)</logic>
-    </Sentence>
-    <Sentence>
-      <logic>Equal(DE,0.5)</logic>
+      <logic>EdgeLengthOfTriangle(ABC,rs_a)</logic>
+      <logic>Asking(rs_a)</logic>
+      <logic>Asking(rs_b)</logic>
+      <logic>Angle(rs_b)</logic>
     </Sentence>
   </blank>
 </question>
