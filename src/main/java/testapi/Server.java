@@ -5,7 +5,11 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-
+/**
+ * 此服务为复旦服务的包装，打开即可开启服务
+ * Created by zhouwei on 2019/6/15.
+ * TODO:依然会有些bug，比如反映回来的消息发送的串发，师弟们可以直接推倒重写，我java水平辣鸡
+ */
 public class Server extends Thread{
     private ServerSocket server = null;
     private Socket socket = null;

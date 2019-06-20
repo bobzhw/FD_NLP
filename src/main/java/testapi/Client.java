@@ -6,7 +6,11 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-
+/**
+ * Created by zhouwei on 2019/4/12.
+ * 客户端，通过修改端口可访问不通服务
+ * TODO：目前是访问之后收到消息就断开，没有做到一直发送，师弟们可以进行修改
+ */
 public class Client extends Thread{
     private Socket sk = null;
     private BufferedReader reader = null;

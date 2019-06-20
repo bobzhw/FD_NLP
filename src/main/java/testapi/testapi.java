@@ -10,9 +10,15 @@ import org.dom4j.io.SAXReader;
 import java.io.File;
 import java.util.*;
 
+/**
+ * 复旦接口类
+ * **/
 public class testapi {
 	private static Map<String,String> ignoremaps = new HashMap<String, String>();
 	private static Map<String,String> equalMaps = new HashMap<String, String>();
+	/**
+	 * 用于将等式不等式作为一个整体
+	 * **/
 	private static final List<String> characters = new ArrayList<String>(
             Arrays.asList("+","-","*","/","0","1","2","3","4","5","6","7","8","9",
             "a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p",
@@ -20,6 +26,9 @@ public class testapi {
             "G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V",
             "W","X","Y","Z","_","∠","(",")","^","%",":",".","&","&","∞",
 					"↑","θ",",","[","]","|","*","π","√"));
+	/**
+	 * 用于将等式不等式不作为一个整体
+	 * **/
 	private static final List<String> lone_characters = new ArrayList<String>(
 			Arrays.asList("+","-","*","/","0","1","2","3","4","5","6","7","8","9",
 					"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p",
@@ -28,9 +37,9 @@ public class testapi {
 					"W","X","Y","Z","_","∠","(",")","^","%",":",".","&","&","∞",
 					"↑","θ",",","[","]","|","*","π","=",">","<","!","√")
 	);
-//	private static final List<String> specialCharacter = new ArrayList<String>(
-//			Arrays.asList("=")
-//	)
+	/**
+	 * 将表达是替换的字符串，其实可以改成一些汉字，不会造成冲突，交给你们了
+	 * **/
     private static final List<String> keyWords = new ArrayList<String>(
             Arrays.asList("I","J","K","U","V","W","T","u","v","w","i","j","k"));
 	public static void main(String[] args) throws Exception {
@@ -38,6 +47,9 @@ public class testapi {
 //		singleTest(index,"圆C的圆心为点(a,b)，半径为r，则圆C的标准方程为(x-a)^2+(y-b)^2=r^2");
 		testXml("椭圆O的焦点F1, F2在x轴，则它的标准方程是$ \\frac{x^2}{a^2} + \\frac{y^2}{b^2}=1(a>b>0)$ ");
 	}
+	/**
+	 * 将表达式变为一个整体
+	 * **/
 	private static String convertToVariable(String stem,List<String> tmpCharacters,Map<String,String> stringMap)
     {
 		stringMap.clear();
@@ -94,6 +106,9 @@ public class testapi {
         }
         return stem;
     }
+	/**
+	 * 没用到，不写了
+	 * **/
     private static void GenerateEntityMap(String result,Map<String,String> entitys)
 	{
 		String[] results = result.split(" ");
@@ -107,6 +122,9 @@ public class testapi {
 			}
 		}
 	}
+	/**
+	 * 本例子将xml的结果做处理得到Question类对象
+	 * **/
 	private static void getQuestion(Iterator it,Question questions,boolean isConlusion,Map<String,String> stringMap) {
 		while (it.hasNext()) {
 			Element element = (Element) it.next();
@@ -173,6 +191,9 @@ public class testapi {
 			}
 		}
 	}
+	/**
+	 * 将实体放入Question类对象中
+	 * **/
 	private static void pushEntity(Question questions,String key,String typename,boolean isConlusion,
 								   Map<String,String> stringMap)
 	{
@@ -208,6 +229,9 @@ public class testapi {
 
 		}
 	}
+	/**
+	 * 整体逻辑，先加载复旦结果，再处理结果得到Question类对象
+	 * **/
 	private static void doRight(String[] ss,Question questions,Map<String,String> entitys) throws Exception
 	{
 
@@ -221,6 +245,7 @@ public class testapi {
 			String question2 = "<question id=\"test01_65\" type=\"solution\"><blank num=\"1\" " +
 					"format=\"latex\">" + conlusion +
 					".</blank></question>";
+			//先加载复旦结果
 			getXMLFromfudan(question1,"test1.xml");
 			getXMLFromfudan(question2,"test2.xml");
 			SAXReader reader = new SAXReader();
@@ -232,7 +257,7 @@ public class testapi {
 			Element root2 = document2.getRootElement();
 			Iterator it1 = root1.elementIterator();
 			Iterator it2 = root2.elementIterator();
-
+			//处理结果得到Question类对象
 			getQuestion(it1, questions, false,entitys);
 			getQuestion(it2, questions, true,entitys);
 
@@ -267,7 +292,7 @@ public class testapi {
 			String ignoreEqualStem = convertToVariable(stem, lone_characters, ignoremaps);
 			//不将=,>,<,>=,<=作为一个整体做替换
 			String equalstem = convertToVariable(stem, characters, equalMaps);
-			//按则区分结论
+			//按则区分结论,则之前的作为条件，则之后的作为结论
 			String[] igeqstem = ignoreEqualStem.split("则");
 			Question questions = new Question(stem, "test");
 			doRight(igeqstem, questions, ignoremaps);
@@ -287,6 +312,7 @@ public class testapi {
 				} else
 				{
 					int i = 0;
+					//此处是对不等号两端的特殊替换
 					for(i = 0;i<equalsvaluelist.size()-1;i++)
 					{
 						if((equalsvaluelist.get(i)+"="+equalsvaluelist.get(i+1)).equals(value))
@@ -341,6 +367,8 @@ public class testapi {
 //			writer2.close();
 
 		} else {
+			//这个else是之前的一个想法，利用我们的标注服务去加入未标注的实体，但是符老师意思是让复旦那边改，
+			// 就一直没用，如果要用应该还是需要改一些东西的
 			nerClient clt = new nerClient("192.168.1.123", 59997);
 			delUtil.delAllFile("result/");
 			delUtil.delAllFile("result2/");
@@ -380,7 +408,7 @@ public class testapi {
 		}
 		return tmp;
 	}
-//	}
+//	/
 	public static void testXml(String ques)
 	{
 //		ques = ques.replaceAll(" ","");
@@ -400,14 +428,22 @@ public class testapi {
 	}
 
 }
-
+/**
+ * 最后的结果类
+ * **/
 class Question
 {
+	//用于产生随机questionid
 	private static final String chars="ABCDEFGHIJK";
+	//题目的名字
 	public String name;
+	//questionid
 	public String questionId;
+	//题干
 	public String commenText;
+	//实体名：实体类型
 	public Map<String,Entity> entitys;
+	//所以关系
 	public List<Relation> relations;
 	public Question(String questionstem)
 	{
@@ -443,7 +479,9 @@ class Question
 	}
 	public Question(){}
 }
-
+/**
+ * 实体的类型与是否是结论
+ * **/
 class Type
 {
 	public String typename;
@@ -455,6 +493,7 @@ class Type
 	}
 	public Type(){}
 }
+//实体
 class Entity
 {
 	public List<Type> types;
@@ -465,7 +504,7 @@ class Entity
 	public Entity()
 	{}
 }
-
+//关系
 class Relation
 {
     public String entity1;
@@ -485,7 +524,7 @@ class Relation
     }
     public Relation(){}
 }
-
+//条件属性
 class Condition
 {
 	public List<Relation> conditionRelations;
