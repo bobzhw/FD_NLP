@@ -1,6 +1,8 @@
 package RelationTag;
 
-
+/**
+ * Created by zhouwei on 2019/6/19.
+ */
 
 import testapi.TextReader;
 import testapi.TextWriter;
@@ -10,6 +12,12 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 public class Tag {
+    /**
+     * 测试题目
+     * args: AimData:包含实体与实体组合
+     *       TextWriter:传入打开的TextWriter类用于写文件，注意用完之后需要关闭
+     * ps:只有整体退出后，才会真正写到文件中，最好把这道题标注完毕再退出
+     * **/
     public static void singleQuestionTag(AimData data, TextWriter writer) throws  Exception{
 //        AimData data = zwCreateAimData();
         List<EntityPair> questionTagData = LoadData(data);
@@ -151,7 +159,10 @@ public class Tag {
         }
     }
 
-
+    /**
+     * 根据已知entitypair对象获取questionTagData的组合句子，
+     * 返回结果形如：CM【AbstractGeometry】  BP【AbstractGeometry】  "PanRelation"【平移】
+     * **/
     private static List<String> getData(List<EntityPair> questionTagData,EntityPair e)
     {
         for(EntityPair o : questionTagData)
@@ -163,6 +174,9 @@ public class Tag {
         }
         return null;
     }
+    /**
+     * 从data类中加载输出实体对类以及对应组合关系
+     * **/
     private static List<EntityPair> LoadData(AimData data)
     {
         List<String> result = data.getResults();
@@ -207,14 +221,10 @@ public class Tag {
         }
         return questionTagData;
     }
-    private static void WriteSomeThing(List<String> list,TextWriter writer)
-    {
-        for(String line : list)
-        {
-            writer.write(line);
-        }
-    }
 
+    /**
+     * 测试需要，根据result.txt构造AimData对象
+     * **/
     private static AimData zwCreateAimData()
     {
         TextReader reader = new TextReader("result.txt");

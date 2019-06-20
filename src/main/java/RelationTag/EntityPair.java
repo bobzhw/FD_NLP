@@ -1,5 +1,8 @@
 package RelationTag;
-
+/**
+ * Created by zhouwei on 2019/6/19.
+ * 实体对类，包含实体1，实体2，他们之间可能的关系，关系的原句
+ */
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,6 +62,9 @@ public class EntityPair {
         this.originalData = originalData;
     }
 
+    /**
+     * 因为考虑了方向，所以equals的写法比较严格。
+     * **/
     @Override
     public boolean equals(Object obj) {
 
