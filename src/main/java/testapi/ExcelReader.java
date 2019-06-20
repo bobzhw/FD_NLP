@@ -17,7 +17,7 @@ public class ExcelReader {
         File file = new File("/home/zhouwei/文档/Tencent Files/1073394859/FileRecv/必修整高中合.xls");
         Map<String,String> excelmap = obj.readExcel(file);
         System.out.println("list中的数据打印出来");
-        TextWriter writer = new TextWriter("tmp.txt");
+        TextWriter writer = new TextWriter("tmp.txt",false);
         for(Map.Entry e : excelmap.entrySet())
         {
             writer.writeLines(e.getKey()+"\t"+e.getValue());

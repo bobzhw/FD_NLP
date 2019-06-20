@@ -11,24 +11,36 @@ import java.io.File;
 import java.util.*;
 
 public class testapi {
-	private static Map<String,String> maps = new HashMap<String, String>();
+	private static Map<String,String> ignoremaps = new HashMap<String, String>();
+	private static Map<String,String> equalMaps = new HashMap<String, String>();
 	private static final List<String> characters = new ArrayList<String>(
             Arrays.asList("+","-","*","/","0","1","2","3","4","5","6","7","8","9",
             "a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p",
             "q","r","s","t","u","v","w","x","y","z","A","B","C","D","E","F",
             "G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V",
             "W","X","Y","Z","_","∠","(",")","^","%",":",".","&","&","∞",
-					"↑","$","θ",","));
+					"↑","θ",",","[","]","|","*","π","√"));
+	private static final List<String> lone_characters = new ArrayList<String>(
+			Arrays.asList("+","-","*","/","0","1","2","3","4","5","6","7","8","9",
+					"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p",
+					"q","r","s","t","u","v","w","x","y","z","A","B","C","D","E","F",
+					"G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V",
+					"W","X","Y","Z","_","∠","(",")","^","%",":",".","&","&","∞",
+					"↑","θ",",","[","]","|","*","π","=",">","<","!","√")
+	);
+//	private static final List<String> specialCharacter = new ArrayList<String>(
+//			Arrays.asList("=")
+//	)
     private static final List<String> keyWords = new ArrayList<String>(
             Arrays.asList("I","J","K","U","V","W","T","u","v","w","i","j","k"));
 	public static void main(String[] args) throws Exception {
 		int index = 1;
-//		singleTest(index,"三角形ABC经过平移、旋转变换后与三角形EFG重合");
-		testXml("三角形ABC经过平移、旋转变换后与三角形EFG重合");
+//		singleTest(index,"圆C的圆心为点(a,b)，半径为r，则圆C的标准方程为(x-a)^2+(y-b)^2=r^2");
+		testXml("椭圆O的焦点F1, F2在x轴，则它的标准方程是$ \\frac{x^2}{a^2} + \\frac{y^2}{b^2}=1(a>b>0)$ ");
 	}
-	private static String convertToVariable(String stem)
+	private static String convertToVariable(String stem,List<String> tmpCharacters,Map<String,String> stringMap)
     {
-        maps.clear();
+		stringMap.clear();
         int start =0;
         int end = 0;
         int count = 0;
@@ -36,7 +48,7 @@ public class testapi {
         for(int i = 0;i<stem.length();)
         {
             String temp = stem.substring(i,i+1);
-            if(characters.contains(temp))
+            if(tmpCharacters.contains(temp))
             {
                 if(!flag)
                 {
@@ -57,7 +69,7 @@ public class testapi {
                     flag = false;
                     String lhs = stem.substring(0,start);
                     String rhs = stem.substring(end+1);
-                    maps.put(keyWords.get(count),stem.substring(start,end+1));
+					stringMap.put(keyWords.get(count),stem.substring(start,end+1));
                     stem = lhs + keyWords.get(count)+rhs;
                     count++;
                     i=i-end+start;
@@ -70,15 +82,13 @@ public class testapi {
                     flag = false;
                     i++;
                 }
-
-
             }
         }
         if(start!=end)
         {
             String lhs = stem.substring(0,start);
             String rhs = stem.substring(end+1);
-            maps.put(keyWords.get(count),stem.substring(start,end+1));
+			stringMap.put(keyWords.get(count),stem.substring(start,end+1));
             stem = lhs + keyWords.get(count)+rhs;
             count++;
         }
@@ -97,7 +107,7 @@ public class testapi {
 			}
 		}
 	}
-	private static void getQuestion(Iterator it,Question questions,boolean isConlusion,Map<String,String> entitys) {
+	private static void getQuestion(Iterator it,Question questions,boolean isConlusion,Map<String,String> stringMap) {
 		while (it.hasNext()) {
 			Element element = (Element) it.next();
 			List<Element> l = element.elements();
@@ -117,23 +127,23 @@ public class testapi {
 							String e1 = "";
 							String e2 = "";
 
-							if(maps.containsKey(group[1]))
-								e1 = maps.get(group[1]);
+							if(stringMap.containsKey(group[1]))
+								e1 = stringMap.get(group[1]);
 							else
 								e1 = group[1];
-							if(maps.containsKey(group[2]))
-								e2 = maps.get(group[2]);
+							if(stringMap.containsKey(group[2]))
+								e2 = stringMap.get(group[2]);
 							else
 								e2 = group[2];
-							if(r.equals("equal") || r.equals("LessThan") || r.equals("BigThan"))
+							if(r.equals("Equal") || r.equals("LessThan") || r.equals("GreaterThan"))
 							{
-								pushEntity(questions,e1,"Expression",isConlusion);
-								pushEntity(questions,e2,"Expression",isConlusion);
+								pushEntity(questions,e1,"Expression",isConlusion,stringMap);
+								pushEntity(questions,e2,"Expression",isConlusion,stringMap);
 							}
 							List<String> p = new ArrayList<String>();
 							for (int j = 3; j < group.length; j++) {
-								if(maps.containsKey(group[j]))
-									p.add(maps.get(group[j]));
+								if(stringMap.containsKey(group[j]))
+									p.add(stringMap.get(group[j]));
 								else
 									p.add(group[j]);
 							}
@@ -152,7 +162,7 @@ public class testapi {
 						} else {
 							String key = line.substring(line.indexOf("(") + 1, line.indexOf(")"));
 							String typename = line.substring(0, line.indexOf("("));
-							pushEntity(questions,key,typename,isConlusion);
+							pushEntity(questions,key,typename,isConlusion,stringMap);
 
 //
 						}
@@ -163,10 +173,11 @@ public class testapi {
 			}
 		}
 	}
-	private static void pushEntity(Question questions,String key,String typename,boolean isConlusion)
+	private static void pushEntity(Question questions,String key,String typename,boolean isConlusion,
+								   Map<String,String> stringMap)
 	{
-		if (maps.containsKey(key))
-			key = maps.get(key);
+		if (stringMap.containsKey(key))
+			key = stringMap.get(key);
 
 //								questions.entitys.put(key,
 //										new Entity(entitys.get(key)));
@@ -197,9 +208,9 @@ public class testapi {
 
 		}
 	}
-	private static String doRight(String[] ss,Question questions,Map<String,String> entitys) throws Exception
+	private static void doRight(String[] ss,Question questions,Map<String,String> entitys) throws Exception
 	{
-		String tmp = "";
+
 		if (ss.length == 2) {
 
 			String condition = ss[0];
@@ -224,17 +235,12 @@ public class testapi {
 
 			getQuestion(it1, questions, false,entitys);
 			getQuestion(it2, questions, true,entitys);
-			tmp = JSON.toJSONString(questions);
-			System.out.println(tmp);
-			TextWriter writer = new TextWriter("result/" + questions.questionId + ".json");
-			TextWriter writer2 = new TextWriter("result2/" + questions.name + ".json");
-			writer.write(tmp);
-			writer2.write(tmp);
-			writer.close();
-			writer2.close();
+
 		} else
 		{
-			String condition = ss[0];
+			String condition = ss[0].replaceAll("\n","");
+			if(condition.length()==0)
+				return;
 			String question1 = "<question id=\"test01_65\" type=\"solution\"><blank num=\"1\" " +
 					"format=\"latex\">" + condition +
 					".</blank></question>";
@@ -247,40 +253,95 @@ public class testapi {
 			Iterator it1 = root1.elementIterator();
 
 			getQuestion(it1, questions, false,entitys);
-			tmp = JSON.toJSONString(questions);
-			System.out.println(tmp);
-			TextWriter writer = new TextWriter("result/" + questions.questionId + ".json");
-			TextWriter writer2 = new TextWriter("result2/" + questions.name + ".json");
-			writer.write(tmp);
-			writer2.write(tmp);
-			writer.close();
-			writer2.close();
+
 		}
-		return tmp;
 	}
 
 	public synchronized static String singleTest(int index,String stem) throws Exception {
-		String singletest="";
-		if(stem.equals(""))
+		if (stem.equals(""))
 			return "";
-		Map<String,String> entitys = new HashMap<String, String>();
+		String tmp = "";
+		Map<String, String> entitys = new HashMap<String, String>();
 		if (index == 1) {
-//			nerClient clt = new nerClient("192.168.1.123",59997);
-//			delUtil.delAllFile("result3/");
-//			String stem = "平面ABC与平面DEF相交于直线L，平面GHI与平面DEF相交于直线l，则直线L与直线l平行。";
-//			stem.replaceAll(" ","");
-//			clt.sendMsg(stem);
-//			String result = clt.receive();
-
-//			GenerateEntityMap(result,entitys);
-
-			String stem2 = convertToVariable(stem);
-			String[] ss = stem2.split("则");
+			//将=,>,<,>=,<=作为一个整体做替换
+			String ignoreEqualStem = convertToVariable(stem, lone_characters, ignoremaps);
+			//不将=,>,<,>=,<=作为一个整体做替换
+			String equalstem = convertToVariable(stem, characters, equalMaps);
+			//按则区分结论
+			String[] igeqstem = ignoreEqualStem.split("则");
 			Question questions = new Question(stem, "test");
-			singletest=doRight(ss,questions,entitys);
+			doRight(igeqstem, questions, ignoremaps);
+			StringBuilder sb = new StringBuilder();
+			List<String> equalskeylist = new ArrayList<String>();
+			List<String> equalsvaluelist = new ArrayList<String>();
+			for(Map.Entry<String,String> e : equalMaps.entrySet())
+			{
+				equalskeylist.add(e.getKey());
+				equalsvaluelist.add(e.getValue());
+			}
+			for(Map.Entry<String,String> e : ignoremaps.entrySet()) {
+				String key = e.getKey();
+				String value = e.getValue();
+				if (equalsvaluelist.contains(value)) {
+					continue;
+				} else
+				{
+					int i = 0;
+					for(i = 0;i<equalsvaluelist.size()-1;i++)
+					{
+						if((equalsvaluelist.get(i)+"="+equalsvaluelist.get(i+1)).equals(value))
+						{
+
+							sb.append(equalskeylist.get(i)).append("=").append(equalskeylist.get(i+1));
+							i++;
+						}
+						else if((equalsvaluelist.get(i)+">"+equalsvaluelist.get(i+1)).equals(value))
+						{
+
+							sb.append(equalskeylist.get(i)).append(">").append(equalskeylist.get(i+1));
+							i++;
+						}
+						else if((equalsvaluelist.get(i)+"<"+equalsvaluelist.get(i+1)).equals(value))
+						{
+
+							sb.append(equalskeylist.get(i)).append("<").append(equalskeylist.get(i+1));
+							i++;
+						}
+						else if((equalsvaluelist.get(i)+">="+equalsvaluelist.get(i+1)).equals(value))
+						{
+
+							sb.append(equalskeylist.get(i)).append(">=").append(equalskeylist.get(i+1));
+							i++;
+						}
+						else if((equalsvaluelist.get(i)+"<="+equalsvaluelist.get(i+1)).equals(value))
+						{
+
+							sb.append(equalskeylist.get(i)).append("<=").append(equalskeylist.get(i+1));
+							i++;
+						}
+						else
+						{
+							sb.append(equalskeylist.get(i));
+						}
+						sb.append("．");
+					}
+
+				}
+			}
+			List<String> tmplist = new ArrayList<String>();
+			tmplist.add(sb.toString());
+			doRight((String[]) tmplist.toArray(new String[tmplist.size()]), questions, equalMaps);
+			tmp = JSON.toJSONString(questions);
+			System.out.println(tmp);
+//			TextWriter writer = new TextWriter("result/" + questions.questionId + ".json");
+//			TextWriter writer2 = new TextWriter("result2/" + questions.name + ".json");
+//			writer.write(tmp);
+//			writer2.write(tmp);
+//			writer.close();
+//			writer2.close();
 
 		} else {
-			nerClient clt = new nerClient("192.168.1.123",59997);
+			nerClient clt = new nerClient("192.168.1.123", 59997);
 			delUtil.delAllFile("result/");
 			delUtil.delAllFile("result2/");
 			TextReader reader1 = new TextReader("res.txt");
@@ -298,17 +359,31 @@ public class testapi {
 
 //				GenerateEntityMap(result,entitys);
 
-				stem = convertToVariable(stem);
-				String[] ss = stem.split("则");
-				Question questions = new Question(stem2, name);
-				singletest=doRight(ss,questions,entitys);
+				String ignoreEqualStem = convertToVariable(stem, characters, ignoremaps);
+				//不将=,>,<,>=,<=作为一个整体做替换
+				String equalstem = convertToVariable(stem, lone_characters, equalMaps);
+				//按则区分结论
+				String[] igeqstem = ignoreEqualStem.split("则");
+				Question questions = new Question(stem, "test");
+				doRight(igeqstem, questions, entitys);
+				StringBuilder sb = new StringBuilder();
+				for (Map.Entry e : equalMaps.entrySet()) {
+					sb.append(e.getValue()).append("．");
+				}
+				List<String> tmplist = new ArrayList<String>();
+				tmplist.add(sb.toString());
+				doRight((String[]) tmplist.toArray(), questions, entitys);
+
+				tmp = JSON.toJSONString(questions);
+				System.out.println(tmp);
 			}
 		}
-		return singletest;
+		return tmp;
 	}
 //	}
 	public static void testXml(String ques)
 	{
+//		ques = ques.replaceAll(" ","");
 		String question1 = "<question id=\"test01_65\" type=\"solution\"><blank num=\"1\" " +
 				"format=\"latex\">" + ques +
 				".</blank></question>";
@@ -319,7 +394,7 @@ public class testapi {
 	public static void getXMLFromfudan(String question,String path) {
 		// TODO Auto-generated method stub
 		String out=Connect.ConnectWeb("http://jkx.fudan.edu.cn", question, "UTF-8");
-		TextWriter writer = new TextWriter(path);
+		TextWriter writer = new TextWriter(path,false);
 		writer.write(out);
 		writer.close();
 	}

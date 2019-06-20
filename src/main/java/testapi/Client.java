@@ -1,5 +1,7 @@
 package testapi;
 
+import edu.stanford.nlp.util.StringUtils;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -14,7 +16,7 @@ public class Client extends Thread{
     {
         keyin = new BufferedReader(new InputStreamReader(System.in));
         try {
-            sk = new Socket("121.48.165.44",54321);
+            sk = new Socket("192.168.1.123",59997);
         }
         catch (Exception e)
         {
@@ -33,9 +35,18 @@ public class Client extends Thread{
                 wtr.println(get);
                 wtr.flush();
             }
-            if (reader != null) {
+            int x = 0;
+            while (reader != null) {
+
                 String line = reader.readLine();
+
+                if(StringUtils.isNumeric(line))
+                    x = Integer.valueOf(line);
+                else
+                    x--;
                 System.out.println(line);
+                if(x==0)
+                    break;
             }
 
         }

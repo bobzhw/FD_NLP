@@ -5,10 +5,10 @@ import java.io.Writer;
 
 
 public class TextWriter {
-    public TextWriter(String filepath)
+    public TextWriter(String filepath,boolean isAppend)
     {
         try {
-            writer = new FileWriter(filepath);
+            writer = new FileWriter(filepath,isAppend);
         }catch (Exception e)
         {
             e.printStackTrace();
